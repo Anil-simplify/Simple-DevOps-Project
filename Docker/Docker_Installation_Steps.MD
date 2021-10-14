@@ -21,7 +21,11 @@
    ```
 1. add a user to docker group to manage docker 
    ```
+   # to check all the groups do following command
+   cat /etc/group
    usermod -aG docker dockeradmin
+   # to check if the user is part of docker admin group do below
+   id dockeradmin
    ```
 ### Validation test
 1. Create a tomcat docker container by pulling a docker image from the public docker registry
