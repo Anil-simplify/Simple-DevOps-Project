@@ -28,6 +28,22 @@
    ```sh
    docker run -d --name test-tomcat-server -p 8090:8080 tomcat:latest
    ```
+2. Check if container is not running, the webapps folder might be empty
+   ```sh
+   docker exec -it tomcat-container /bin/bash
+   cd webapps
+   ls
+   # webapps would be empty and needs to be filled
+   cd ..
+   cd webapps.dist
+   ls
+   # Contains files which should be moved to web app
+   cp -R * ../webapps
+   # now files are copied and tomcat server should be visible on browser
+   cd ../webapps
+   ls
+   ```
+   
 
 ## Docker Installation on CentOS server
 ##### Referance URL : https://docs.docker.com/install/linux/docker-ce/centos/#install-using-the-repository
