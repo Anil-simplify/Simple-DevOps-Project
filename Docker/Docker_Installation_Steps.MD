@@ -47,6 +47,31 @@
    cd ../webapps
    ls
    ```
+### Integrating Docker-host with Jenkins
+
+1. Install Publish over SSH plugin in Jenkins
+2. Go to system configurations and then to Publish over SSH section
+3. Add SSH server with name as docker-host and hostname as IP of docker-host server and username as dockeradmin
+4. Now go to advanced and enable use password authentication or use a different key and give the password
+5. Click Test Configuration and it will fail because password based access is not enabled on EC2 instances
+6. To enable the same if Password Authentication is not set then do this
+   ```sh
+   vi /etc/ssh/sshd_config
+   # find password by /password and change PasswordAuthentication to Yes
+   # now restart sshd service for this to take effect
+   service sshd reload
+   ```
+7. Or it can be case that dockeradmin user is not entitled properly in that case try to log in via dockeradmin through putty
+   if your password is not accepted you are not successful sudoer
+   Also confirm this by logging in as root and then try logging in as other user via sudo su <username>
+   You will be able to login but now if you try to login as root via sudo su -  then you will be asked password and when you enter you will get the message "user is not in successful sudoers list".  To make user the successful sudoer change the file named /etc/sudoers
+   ```sh
+   vi /etc/sudoers
+   # insert the following line below the root / admin
+   username ALL=(ALL) ALL
+   ```
+   This will solve the problem.  Now this user can log in even via putty.  Jenkins Test configuration with show success.
+   
    
 
 ## Docker Installation on CentOS server
