@@ -72,6 +72,20 @@
    ```
    This will solve the problem.  Now this user can log in even via putty.  Jenkins Test configuration with show success.
    
+### Deploy on docker
+1. Build a new jenkins job
+   A. Copy from Deploy_on_Tomcat_server jenkins job
+   B. Remove SCM Poll for Github its not needed
+   C. Remove post build action : Deploye War/ear to a container
+   D. Add new post build action :  Send build artifacts over SSH
+   E. In Transfers in Source Files = webapp/target/*.war  (and do Remove_prefix = webapp/target).  You need to get the path of your build in jenkins server.  So find the workspace in jenkins server through below SSH and then do ls to get navigate to the build
+   ```sh
+   find / -name "workspace"
+   ```
+   Now go to the build directory and withing that build war file will lie somewhere in webapp/target.  You need to give this path after build path as your source file.
+   F. In Remove_prefix  you can remove the tree and only keep War file
+   G. File will be copied in home directory of the dockeradmin user.  Check that to confirm the build.
+   
    
 
 ## Docker Installation on CentOS server
