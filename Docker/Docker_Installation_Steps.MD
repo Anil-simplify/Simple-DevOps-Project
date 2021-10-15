@@ -86,7 +86,47 @@
    F. In Remove_prefix  you can remove the tree and only keep War file
    G. File will be copied in home directory of the dockeradmin user.  Check that to confirm the build.
    
+### Deploy on Container
+1. Create a docker file provided in documents "Anil docker file for deploy on container job"
+2. ```sh
+   vi Dockerfile
+   ```
+3. Save the file
+4. Build image from Docker
+   ```sh
+   docker build -t devops-project .
+   ```
+5. Run container based on this image
+   ```sh
+   docker run -d --name devops-container -p 8080:8080 devops-project
+   ```
+6. Build a new jenkins job  : Deploy_on_Container
+   A. Copy from Deploy_on_Docker job
+   B. In SSH server -> Transfer (keep everything same but add exec command) -> exec command
+   "cd /home/dockeradmin; docker build -t devops-image .; docker run -d --name devops-container -p 8080:8080 devops-image;"  (without quotes)
+   C. Before building remove previously created files
+   ```sh
+   # remove webapp.war
+   rm -rf webapp.war
    
+   # remove containers
+   docker ps -a  
+   # to see the containers if any
+   # do below for stopping the container first
+   docker stop <container id>
+   # do below for removing the container
+   docker rm <container id>
+   
+   # remove images
+   # to see images
+   docker images
+   # to remove images 
+   docker rmi <image name or image id>
+   ```
+   D. Now build the job
+   E. Verify on docker-host if new image has been created and container is running
+
+
 
 ## Docker Installation on CentOS server
 ##### Referance URL : https://docs.docker.com/install/linux/docker-ce/centos/#install-using-the-repository
