@@ -11,6 +11,10 @@ Jenkins is a self-contained Java-based program, ready to run out-of-the-box, wit
 ## Install Java
 1. We will be using open java for our demo, Get the latest version from http://openjdk.java.net/install/
    ```sh
+   sudo su -                        # to become root for installation
+   java -version                    # to check if java is already installed.  if java -version is 1.7 which is case for amazon linux then remove the same
+   yum remove java-1.7.*            # execute in case java-1.7 is there because we need java 1.8
+   java -version                    # to check if the version is removed.  now you will get no such file or directory.
    yum install java-1.8*
    #yum -y install java-1.8.0-openjdk-devel
    ```
@@ -20,10 +24,15 @@ Jenkins is a self-contained Java-based program, ready to run out-of-the-box, wit
    java -version
    find /usr/lib/jvm/java-1.8* | head -n 3
    JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-<Java version which seen in the above output>
-   export JAVA_HOME
-   PATH=$PATH:$JAVA_HOME
-    # To set it permanently update your .bash_profile
-   vi ~/.bash_profile
+   CD ~                             # to get to the home directory of user. if you are root then root's home directory
+   vi .bash_profile
+   # following lines should be added under # User specific environment and startup programs
+   # JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.302.b08-0.amzn2.0.1.x86_64
+   # PATH=$PATH:$HOME/bin  will be appended with :$JAVA_HOME and merger will become PATH=$PATH:$HOME/bin:$JAVA_HOME 
+   
+   # type below to display java_home path
+   sudo su -
+   echo $JAVA_HOME
    ```
    _The output should be something like this,_
     ```sh
