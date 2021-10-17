@@ -2,13 +2,24 @@
 
 
 1. Create Ubuntu EC2 instance
+
 1. install AWSCLI
    ```sh
     curl https://s3.amazonaws.com/aws-cli/awscli-bundle.zip -o awscli-bundle.zip
+    # now do ls to check that you have awscli-bundle 
     apt install unzip python
-    unzip awscli-bundle.zip
+    # above gives error : Will say that 'python' has not installation candidate and suggest to use 'python-is-python3' in its place
+    apt install unzil python-is-python3
+    # original instruction:   unzip awscli-bundle.zip  will give you error
+    sudo apt-get update
+    apt-get install python3-virtualenv
+    sudo apt-get install python3-venv
     #sudo apt-get install unzip - if you dont have unzip in your system
+    unzip awscli-bundle.zip
     ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+    # Installation will be validate by this version check
+    /usr/local/bin/aws --version  
+    # OR aws --version will give the same result
     ```
 
 1. Install kubectl on ubuntu instance
@@ -20,6 +31,7 @@
    ```
 
 1. Install kops on ubuntu instance
+   
    ```sh
     curl -LO  https://github.com/kubernetes/kops/releases/download/1.15.0/kops-linux-amd64
     chmod +x kops-linux-amd64
@@ -46,11 +58,11 @@
 
 1. create an S3 bucket
    ```sh
-    aws s3 mb s3://demo.k8s.valaxy.net
+    aws s3 mb s3://anildemo.k8s.valaxy.net
    ```
 1. Expose environment variable:
    ```sh
-    export KOPS_STATE_STORE=s3://demo.k8s.valaxy.net
+    export KOPS_STATE_STORE=s3://anildemo.k8s.valaxy.net
    ```
 
 1. Create sshkeys before creating cluster
@@ -60,12 +72,12 @@
 
 1. Create kubernetes cluster definitions on S3 bucket
    ```sh
-   kops create cluster --cloud=aws --zones=ap-south-1b --name=demo.k8s.valaxy.net --dns-zone=valaxy.net --dns private 
+   kops create cluster --cloud=aws --zones=ap-south-1 --name=anildemo.k8s.valaxy.net --dns-zone=valaxy.net --dns private
     ```
 
 1. Create kubernetes cluser
     ```sh
-    kops update cluster demo.k8s.valaxy.net --yes
+    kops update cluster anildemo.k8s.valaxy.net --yes
     ```
 1. To cahnge the kubernetes master and worker instance sizes 
    ```sh 
@@ -87,14 +99,17 @@
    ```sh
    kubectl get nodes
    ```
-
+1. To login to the master node from ubunto root
+   ssh -i ~/.ssh/id_rsa admin@api.anildemo.k8s.valaxy.net
 
    
 #### Deploying Nginx pods on Kubernetes
 1. Deploying Nginx Container
     ```sh
-    kubectl run --generator=run-pod/v1 sample-nginx --image=nginx --replicas=2 --port=80
-    #kubectl run sample-nginx --image=nginx --replicas=2 --port=80
+    kubectl create deploy sample-nginx --image=nginx
+    kubectl scale deployment sample-nginx --replicas 2
+    kubectl get deploy
+    # kubectl run sample-nginx --image=nginx --replicas=2 --port=80
     # kubectl run simple-devops-project --image=yankils/simple-devops-image --replicas=2 --port=8080
     kubectl get pods
     kubectl get deployments
